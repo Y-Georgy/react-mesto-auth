@@ -1,6 +1,7 @@
 import '../index.css'
 import Loading from './Loading'
 import { useEffect, useState } from 'react'
+import { Route } from 'react-router-dom'
 import { Header } from './Header'
 import Main from './Main'
 import Footer from './Footer'
@@ -151,42 +152,49 @@ function App() {
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-
-        {isLoading && <Loading />}
-        {!isLoading && (
-          <>
-            <Main
-              onEditAvatar={handleEditAvatarClick}
-              onEditProfile={handleEditProfileClick}
-              onAddPlace={handleAddPlaceClick}
-              onCardClick={handleCardClick}
-              cards={cards}
-              onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
-            />
-            <Footer footerText="© 2021 Mesto Russia" />
-
-            <EditProfilePopup
-              isOpen={isEditProfilePopupOpen}
-              onClose={handlePopupClose}
-              onUpdateUser={handleUpdateUser}
-            />
-            {isAddPlacePopupOpen && (
-              <AddPlacePopup
-                isOpen={isAddPlacePopupOpen}
-                onClose={handlePopupClose}
-                onAddPlace={handleAddPlaceSubmit}
+        <Route path="/sign-up">
+          <Ducks />
+        </Route>
+        <Route path="/sign-in">
+          <MyProfile />
+        </Route>
+        <Route path="/">
+          {isLoading && <Loading />}
+          {!isLoading && (
+            <>
+              <Main
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onCardClick={handleCardClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
               />
-            )}
-            <EditAvatarPopup
-              isOpen={isEditAvatarPopupOpen}
-              onClose={handlePopupClose}
-              onUpdateAvatar={handleUpdateAvatar}
-            />
-            <ImagePopup card={selectedCard} onClose={handlePopupClose} />
-            <ConfirmPopup isOpen={isConfirmPopupOpen} onClose={handlePopupClose} onConfirm={handleConfirm} />
-          </>
-        )}
+              <Footer footerText="© 2021 Mesto Russia" />
+
+              <EditProfilePopup
+                isOpen={isEditProfilePopupOpen}
+                onClose={handlePopupClose}
+                onUpdateUser={handleUpdateUser}
+              />
+              {isAddPlacePopupOpen && (
+                <AddPlacePopup
+                  isOpen={isAddPlacePopupOpen}
+                  onClose={handlePopupClose}
+                  onAddPlace={handleAddPlaceSubmit}
+                />
+              )}
+              <EditAvatarPopup
+                isOpen={isEditAvatarPopupOpen}
+                onClose={handlePopupClose}
+                onUpdateAvatar={handleUpdateAvatar}
+              />
+              <ImagePopup card={selectedCard} onClose={handlePopupClose} />
+              <ConfirmPopup isOpen={isConfirmPopupOpen} onClose={handlePopupClose} onConfirm={handleConfirm} />
+            </>
+          )}
+        </Route>
       </CurrentUserContext.Provider>
     </div>
   )
