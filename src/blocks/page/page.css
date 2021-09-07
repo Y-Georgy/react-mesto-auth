@@ -1,0 +1,22 @@
+.page {
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color: #FFF;
+  font-family: 'Inter', 'Arial', sans-serif;
+  padding-top: 45px;
+  padding-bottom: 60px;
+}
+
+/* .page, .content, img, div, h1, h2, h3, p, ul, li, nav, section {
+  outline: red 1px dashed;
+} */
+
+@media (max-width: 918px) {
+  .page {
+    padding-top: 28px;
+    padding-bottom: 36px;
+  }
+}
