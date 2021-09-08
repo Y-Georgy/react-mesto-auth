@@ -18,6 +18,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState({})
   const [cards, setCards] = useState([])
+  const [loggedIn, setLoggedIn] = useState(false)
 
   // Получение карточек и данных пользователя
   useEffect(() => {
@@ -152,48 +153,48 @@ function App() {
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-        <Route path="/sign-up">
-          <Ducks />
-        </Route>
-        <Route path="/sign-in">
-          <MyProfile />
-        </Route>
-        <Route path="/">
-          {isLoading && <Loading />}
-          {!isLoading && (
-            <>
-              <Main
-                onEditAvatar={handleEditAvatarClick}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                onCardClick={handleCardClick}
-                cards={cards}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-              />
-              <Footer footerText="© 2021 Mesto Russia" />
-
-              <EditProfilePopup
-                isOpen={isEditProfilePopupOpen}
-                onClose={handlePopupClose}
-                onUpdateUser={handleUpdateUser}
-              />
-              {isAddPlacePopupOpen && (
-                <AddPlacePopup
-                  isOpen={isAddPlacePopupOpen}
-                  onClose={handlePopupClose}
-                  onAddPlace={handleAddPlaceSubmit}
+        <Route path="/sign-up"></Route>
+        <Route path="/sign-in"></Route>
+        <Route exact path="/">
+          {() => {
+            if (isLoading) {
+              return <Loading />
+            }
+            return (
+              <>
+                <Main
+                  onEditAvatar={handleEditAvatarClick}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onCardClick={handleCardClick}
+                  cards={cards}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
                 />
-              )}
-              <EditAvatarPopup
-                isOpen={isEditAvatarPopupOpen}
-                onClose={handlePopupClose}
-                onUpdateAvatar={handleUpdateAvatar}
-              />
-              <ImagePopup card={selectedCard} onClose={handlePopupClose} />
-              <ConfirmPopup isOpen={isConfirmPopupOpen} onClose={handlePopupClose} onConfirm={handleConfirm} />
-            </>
-          )}
+                <Footer footerText="© 2021 Mesto Russia" />
+
+                <EditProfilePopup
+                  isOpen={isEditProfilePopupOpen}
+                  onClose={handlePopupClose}
+                  onUpdateUser={handleUpdateUser}
+                />
+                {isAddPlacePopupOpen && (
+                  <AddPlacePopup
+                    isOpen={isAddPlacePopupOpen}
+                    onClose={handlePopupClose}
+                    onAddPlace={handleAddPlaceSubmit}
+                  />
+                )}
+                <EditAvatarPopup
+                  isOpen={isEditAvatarPopupOpen}
+                  onClose={handlePopupClose}
+                  onUpdateAvatar={handleUpdateAvatar}
+                />
+                <ImagePopup card={selectedCard} onClose={handlePopupClose} />
+                <ConfirmPopup isOpen={isConfirmPopupOpen} onClose={handlePopupClose} onConfirm={handleConfirm} />
+              </>
+            )
+          }}
         </Route>
       </CurrentUserContext.Provider>
     </div>
