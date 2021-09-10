@@ -13,9 +13,17 @@ function Register({ onSubmit }) {
     setPassword(e.target.value)
   }
 
+  function handleRegisterSubmit(e) {
+    e.preventDefault()
+    onSubmit({
+      password,
+      email,
+    })
+  }
+
   return (
-    <form method="POST" className="form" name="register" onSubmit={onSubmit}>
-      <h3 className="form__title">Вход</h3>
+    <form method="POST" className="form" name="register" onSubmit={handleRegisterSubmit}>
+      <h3 className="form__title">Регистрация</h3>
 
       <input
         placeholder="Email"

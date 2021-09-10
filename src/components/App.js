@@ -15,6 +15,8 @@ import ConfirmPopup from './ConfirmPopup'
 import { initialCards, initialProfile } from '../utils/constants'
 import Login from './Login'
 import Register from './Register'
+import InfoTooltip from './InfoTooltip'
+import { apiAuth } from '../utils/ApiAuth'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
@@ -50,6 +52,8 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
   const [cardToDelete, setCardToDelete] = useState({})
+  const [toolTipMessage, setToolTipMessage] = useState('') // открывает попап и передает сообщение
+  const [isErrorToolTip, setIsErrorToolTip] = useState(false)
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true)
@@ -151,16 +155,56 @@ function App() {
       .catch((rej) => console.log(rej))
   }
 
+  // ОБРАБОТЧИК ВХОДА ПОЛЬЗОВАТЕЛЯ
+  function handleLogin({ password, email }) {
+    apiAuth
+      .login({
+        password: password,
+        email: email,
+      })
+      .then((res) => {
+        console.log(res) // res.token
+        setIsErrorToolTip(false)
+        setToolTipMessage('Вы вошли в аккаунт!')
+      })
+      .catch((err) => {
+        setIsErrorToolTip(true)
+        setToolTipMessage(err)
+      })
+  }
+  function handleRegister({ password, email }) {
+    apiAuth
+      .register({
+        password: password,
+        email: email,
+      })
+      .then((res) => {
+        console.log(res.data._id) // res.data._id, res.data.email
+        setIsErrorToolTip(false)
+        setToolTipMessage('Вы успешно зарегистрировались!')
+      })
+      .catch((err) => {
+        setIsErrorToolTip(true)
+        setToolTipMessage(err)
+      })
+  }
+
+  function handleToolTipClose() {
+    setToolTipMessage('')
+  }
+
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
+        <InfoTooltip isError={isErrorToolTip} message={toolTipMessage} onClose={handleToolTipClose} />
+
         <Switch>
           <Route path="/sign-up">
-            <Register onSubmit="" />
+            <Register onSubmit={handleRegister} />
           </Route>
           <Route path="/sign-in">
-            <Login onSubmit="" />
+            <Login onSubmit={handleLogin} />
           </Route>
           <Route exact path="/">
             {() => {
