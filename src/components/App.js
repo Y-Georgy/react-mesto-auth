@@ -2,7 +2,7 @@ import '../index.css'
 import Loading from './Loading'
 import { useEffect, useState } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { Header } from './Header'
+import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
 import ImagePopup from './ImagePopup'
@@ -22,7 +22,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState({})
   const [cards, setCards] = useState([])
-  const [loggedIn, setLoggedIn] = useState(false)
+  // const [loggedIn, setLoggedIn] = useState(false)
 
   // Получение карточек и данных пользователя
   useEffect(() => {

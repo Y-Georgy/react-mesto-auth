@@ -2,15 +2,25 @@ import logo from '../images/logo.svg'
 import { Link } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 
-export const Header = () => {
+function Header() {
+  const headerProfile = document.querySelector('.header__profile-top')
+  const headerBurgerMenu = document.querySelector('.header__burger-menu')
+
   function handleBurgerMenuClick() {
-    const headerProfile = document.querySelector('.header__profile_place_top')
+    headerProfile.classList.add("header__profile-top_opened")
+    headerBurgerMenu.classList.add('header__burger-menu_close')
+    const headerBurgerMenuClose = document.querySelector('.header__burger-menu_close')
+    headerBurgerMenuClose.addEventListener('click', handleBurgerMenuClose)
+  }
+
+  function handleBurgerMenuClose() {
+    headerBurgerMenu.classList.remove('header__profile-top_opened')
   }
 
   return (
     <>
       <Route exact path="/">
-        <div className="header__profile header__profile_place_top">
+        <div className="header__profile-top">
           <p className="header__email">email@yandex.ru</p>
           <Link to="/sign-in" className="header__link header__link_color_grey">
             Выйти
@@ -36,7 +46,7 @@ export const Header = () => {
             </Route>
             <Route exact path="/">
               <div className="header__burger-menu" onClick={handleBurgerMenuClick} />
-              <div className="header__profile header__profile_place_right">
+              <div className="header__profile-right">
                 <p className="header__email">email@yandex.ru</p>
                 <Link to="/sign-in" className="header__link header__link_color_grey">
                   Выйти
@@ -49,3 +59,5 @@ export const Header = () => {
     </>
   )
 }
+
+export default Header;

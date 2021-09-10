@@ -1,9 +1,9 @@
-.header__profile_place_top {
+.header__profile-top_opened {
   display: none;
 }
 
 @media (max-width: 918px) {
-  .header__profile_place_top {
+  .header__profile-top_opened {
     display: flex;
   }
 }
