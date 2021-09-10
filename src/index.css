@@ -16,8 +16,8 @@
 @import url(./blocks/header/__email/header__email.css);
 @import url(./blocks/header/__nav/header__nav.css);
 @import url(./blocks/header/__link/_color/header__link_color_grey.css);
-@import url(./blocks/header/__burger-menu/header__burger-menu.css);
-@import url(./blocks/header/__burger-menu/_close/header__burger-menu_close.css);
+@import url(./blocks/header/__burger-menu-icon/header__burger-menu-icon.css);
+@import url(./blocks/header/__burger-menu-close/header__burger-menu-close.css);
 @import url(./blocks/header/__profile-top/header__profile-top.css);
 @import url(./blocks/header/__profile-right/header__profile-right.css);
 @import url(./blocks/header/__profile-top/_opened/header__profile-top_opened.css);

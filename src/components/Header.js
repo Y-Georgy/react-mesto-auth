@@ -4,17 +4,15 @@ import { Route, Switch } from 'react-router-dom'
 
 function Header() {
   const headerProfile = document.querySelector('.header__profile-top')
-  const headerBurgerMenu = document.querySelector('.header__burger-menu')
+  const headerBurgerMenuIcon = document.querySelector('.header__burger-menu-icon')
 
   function handleBurgerMenuClick() {
     headerProfile.classList.add("header__profile-top_opened")
-    headerBurgerMenu.classList.add('header__burger-menu_close')
-    const headerBurgerMenuClose = document.querySelector('.header__burger-menu_close')
-    headerBurgerMenuClose.addEventListener('click', handleBurgerMenuClose)
+    headerBurgerMenuIcon.style.display = 'none'
   }
 
   function handleBurgerMenuClose() {
-    headerBurgerMenu.classList.remove('header__profile-top_opened')
+    headerBurgerMenuIcon.classList.remove('header__profile-top_opened')
   }
 
   return (
@@ -45,7 +43,8 @@ function Header() {
               </Link>
             </Route>
             <Route exact path="/">
-              <div className="header__burger-menu" onClick={handleBurgerMenuClick} />
+              <div className="header__burger-menu-icon" onClick={handleBurgerMenuClick} />
+              <div className="header__burger-menu-close" onClick={handleBurgerMenuClose} />
               <div className="header__profile-right">
                 <p className="header__email">email@yandex.ru</p>
                 <Link to="/sign-in" className="header__link header__link_color_grey">

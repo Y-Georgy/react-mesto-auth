@@ -1,9 +1,9 @@
-.header__burger-menu {
+.header__burger-menu-icon {
   display: none;
 }
 
 @media (max-width: 918px) {
-  .header__burger-menu {
+  .header__burger-menu-icon {
     display: flex;
     width: 24px;
     height: 18px;
@@ -13,7 +13,7 @@
     background-size: 24px 18px;
   }
 
-  .header__burger-menu:hover {
+  .header__burger-menu-icon:hover {
     cursor: pointer;
     opacity: 0.6;
     transition: opacity 0.3s linear;
