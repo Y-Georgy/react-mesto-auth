@@ -4,7 +4,6 @@ class ApiAuth {
   }
 
   _handleResponse(res) {
-    console.log(res)
     if (res.ok) {
       return res.json()
     } else {
@@ -19,7 +18,15 @@ class ApiAuth {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(dataAuth),
-    }).then(this._handleResponse)
+    }).then((res) => {
+      if (res.ok) {
+        return res.json()
+      } else if (res.status === 400) {
+        return Promise.reject(`Пользователь с таким Email уже зарегистрирован!`)
+      } else {
+        return Promise.reject('Что-то пошло не так! Попробуйте ещё раз.')
+      }
+    })
   }
 
   login(dataAuth) {

@@ -27,7 +27,7 @@ function Register({ onSubmit }) {
 
       <input
         placeholder="Email"
-        type="text"
+        type="email"
         className="form__input"
         name="email"
         required

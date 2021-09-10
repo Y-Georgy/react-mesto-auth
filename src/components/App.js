@@ -77,6 +77,7 @@ function App() {
     setIsAddPlacePopupOpen(false)
     setIsConfirmPopupOpen(false)
     setSelectedCard({})
+    setToolTipMessage('')
   }
 
   // обработчик клика закрытия попапов
@@ -189,15 +190,11 @@ function App() {
       })
   }
 
-  function handleToolTipClose() {
-    setToolTipMessage('')
-  }
-
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
-        <InfoTooltip isError={isErrorToolTip} message={toolTipMessage} onClose={handleToolTipClose} />
+        <InfoTooltip isError={isErrorToolTip} message={toolTipMessage} onClose={handlePopupClose} />
 
         <Switch>
           <Route path="/sign-up">
