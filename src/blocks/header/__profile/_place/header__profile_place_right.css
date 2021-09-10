@@ -1,0 +1,5 @@
+@media (min-width: 919px) {
+  .header__profile_place_right {
+    display: flex;
+  }
+}

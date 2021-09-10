@@ -1,0 +1,9 @@
+.header__profile_place_top {
+  display: none;
+}
+
+@media (max-width: 918px) {
+  .header__profile_place_top {
+    display: flex;
+  }
+}
