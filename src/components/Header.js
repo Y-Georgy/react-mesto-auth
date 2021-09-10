@@ -5,14 +5,19 @@ import { Route, Switch } from 'react-router-dom'
 function Header() {
   const headerProfile = document.querySelector('.header__profile-top')
   const headerBurgerMenuIcon = document.querySelector('.header__burger-menu-icon')
+  const headerBurgerMenuClose = document.querySelector('.header__burger-menu-close')
+
 
   function handleBurgerMenuClick() {
     headerProfile.classList.add("header__profile-top_opened")
     headerBurgerMenuIcon.style.display = 'none'
+    headerBurgerMenuClose.style.display = 'flex'
   }
 
   function handleBurgerMenuClose() {
-    headerBurgerMenuIcon.classList.remove('header__profile-top_opened')
+    headerProfile.classList.remove("header__profile-top_opened")
+    headerBurgerMenuIcon.style.display = 'flex'
+    headerBurgerMenuClose.style.display = 'none'
   }
 
   return (

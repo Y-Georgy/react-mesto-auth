@@ -1,4 +1,21 @@
 .header__burger-menu-close {
-  background-image: url('../../../images/burger-menu-close.svg');
-  background-size: 20px;
+  display: none;
+}
+
+@media (max-width: 918px) {
+  .header__burger-menu-close {
+    /* display: flex; */
+    width: 24px;
+    height: 18px;
+    background-image: url('../../../images/burger-menu-close.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+  }
+
+  .header__burger-menu-close:hover {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s linear;
+  }
 }
