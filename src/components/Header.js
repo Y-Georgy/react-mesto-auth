@@ -3,19 +3,18 @@ import { Link } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 
 function Header() {
-  const headerProfile = document.querySelector('.header__profile-top')
+  const headerProfileElement = document.querySelector('.header__profile-top')
   const headerBurgerMenuIcon = document.querySelector('.header__burger-menu-icon')
   const headerBurgerMenuClose = document.querySelector('.header__burger-menu-close')
 
-
   function handleBurgerMenuClick() {
-    headerProfile.classList.add("header__profile-top_opened")
+    headerProfileElement.classList.add('header__profile-top_opened')
     headerBurgerMenuIcon.style.display = 'none'
     headerBurgerMenuClose.style.display = 'flex'
   }
 
   function handleBurgerMenuClose() {
-    headerProfile.classList.remove("header__profile-top_opened")
+    headerProfileElement.classList.remove('header__profile-top_opened')
     headerBurgerMenuIcon.style.display = 'flex'
     headerBurgerMenuClose.style.display = 'none'
   }
@@ -64,4 +63,4 @@ function Header() {
   )
 }
 
-export default Header;
+export default Header
