@@ -46,6 +46,24 @@ class ApiAuth {
       }
     })
   }
+
+  checkToken(token) {
+    return fetch(`${this._baseUrl}/users/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((res) => {
+      if (res.ok) {
+        return res.json()
+      } else if (res.status === 401) {
+        return Promise.reject(`Токен не валиден`)
+      } else {
+        return Promise.reject('Что-то пошло не так! Попробуйте ещё раз.')
+      }
+    })
+  }
 }
 
 export const apiAuth = new ApiAuth({

@@ -12,7 +12,7 @@ function Login({ onSubmit }) {
     setPassword(e.target.value)
   }
 
-  function handleRegisterSubmit(e) {
+  function handleLoginSubmit(e) {
     e.preventDefault()
     onSubmit({
       password,
@@ -21,7 +21,7 @@ function Login({ onSubmit }) {
   }
 
   return (
-    <form method="POST" className="form" name="login" onSubmit={handleRegisterSubmit}>
+    <form method="POST" className="form" name="login" onSubmit={handleLoginSubmit}>
       <h3 className="form__title">Вход</h3>
 
       <input

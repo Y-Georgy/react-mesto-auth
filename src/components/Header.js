@@ -2,7 +2,7 @@ import logo from '../images/logo.svg'
 import { Link } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 
-function Header() {
+function Header({ userAuth, onSignOut }) {
   const headerProfileElement = document.querySelector('.header__profile-top')
   const headerBurgerMenuIcon = document.querySelector('.header__burger-menu-icon')
   const headerBurgerMenuClose = document.querySelector('.header__burger-menu-close')
@@ -23,8 +23,8 @@ function Header() {
     <>
       <Route exact path="/">
         <div className="header__profile-top">
-          <p className="header__email">email@yandex.ru</p>
-          <Link to="/sign-in" className="header__link header__link_color_grey">
+          <p className="header__email">{userAuth.email}</p>
+          <Link to="/sign-in" className="header__link header__link_color_grey" onClick={onSignOut}>
             Выйти
           </Link>
         </div>
@@ -50,8 +50,8 @@ function Header() {
               <div className="header__burger-menu-icon" onClick={handleBurgerMenuClick} />
               <div className="header__burger-menu-close" onClick={handleBurgerMenuClose} />
               <div className="header__profile-right">
-                <p className="header__email">email@yandex.ru</p>
-                <Link to="/sign-in" className="header__link header__link_color_grey">
+                <p className="header__email">{userAuth.email}</p>
+                <Link to="/sign-in" className="header__link header__link_color_grey" onClick={onSignOut}>
                   Выйти
                 </Link>
               </div>

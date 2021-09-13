@@ -1,7 +1,7 @@
 import '../index.css'
 import Loading from './Loading'
 import { useEffect, useState } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
@@ -17,12 +17,13 @@ import Login from './Login'
 import Register from './Register'
 import InfoTooltip from './InfoTooltip'
 import { apiAuth } from '../utils/ApiAuth'
+import ProtectedRoute from './ProtectedRoute'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState({})
   const [cards, setCards] = useState([])
-  // const [loggedIn, setLoggedIn] = useState(false)
+  const [userAuth, setUserAuth] = useState({})
 
   // Получение карточек и данных пользователя
   useEffect(() => {
@@ -34,7 +35,9 @@ function App() {
       .catch((err) => {
         setCurrentUser(initialProfile)
         setCards(initialCards)
-        alert(`Данные профиля и карточек не обновились. Ошибка - ${err}`)
+        // alert(`Данные профиля и карточек не обновились. Ошибка - ${err}`)
+        setIsErrorToolTip(true)
+        setToolTipMessage(`Данные профиля и карточек не обновились. ${err}`)
       })
       .finally(() => setIsLoading(false))
   }, [])
@@ -54,6 +57,7 @@ function App() {
   const [cardToDelete, setCardToDelete] = useState({})
   const [toolTipMessage, setToolTipMessage] = useState('') // открывает попап и передает сообщение
   const [isErrorToolTip, setIsErrorToolTip] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true)
@@ -164,15 +168,21 @@ function App() {
         email: email,
       })
       .then((res) => {
-        console.log(res) // res.token
-        setIsErrorToolTip(false)
-        setToolTipMessage('Вы вошли в аккаунт!')
+        //console.log(res) // res.token
+        if (res.token) {
+          localStorage.setItem('token', res.token)
+          setLoggedIn(true)
+          setIsErrorToolTip(false)
+          setToolTipMessage('Вы вошли в аккаунт!')
+          return <Redirect to="./" /> // так не работает???
+        }
       })
       .catch((err) => {
         setIsErrorToolTip(true)
         setToolTipMessage(err)
       })
   }
+
   function handleRegister({ password, email }) {
     apiAuth
       .register({
@@ -180,7 +190,7 @@ function App() {
         email: email,
       })
       .then((res) => {
-        console.log(res.data._id) // res.data._id, res.data.email
+        //console.log(res) // res.data._id, res.data.email
         setIsErrorToolTip(false)
         setToolTipMessage('Вы успешно зарегистрировались!')
       })
@@ -189,11 +199,40 @@ function App() {
         setToolTipMessage(err)
       })
   }
+  useEffect(() => {
+    function checkToken(localToken) {
+      apiAuth
+        .checkToken(localToken)
+        // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTNmMjdhNzY3YzBjODAwMTMxZTkzMGIiLCJpYXQiOjE2MzE1Mjg5MTN9.tMKFQsMJYt8EbAct0EBGoFqcC9aedXfK57fhFUJlT1Y
+        .then((res) => {
+          if (res.data._id && res.data.email) setLoggedIn(true)
+          setUserAuth({
+            id: res.data._id,
+            email: res.data.email,
+          })
+        })
+        .catch((err) => {
+          setLoggedIn(false)
+          setUserAuth({})
+          console.log(err)
+        })
+    }
+    const localToken = localStorage.getItem('token')
+    if (localToken) checkToken(localToken)
+  }, [])
+
+  function handleSignOutButtonClick() {
+    localStorage.removeItem('token')
+    setLoggedIn(false)
+    setUserAuth({})
+  }
+
+  // console.log(loggedIn)
 
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
+        <Header userAuth={userAuth} onSignOut={handleSignOutButtonClick} />
         <InfoTooltip isError={isErrorToolTip} message={toolTipMessage} onClose={handlePopupClose} />
 
         <Switch>
@@ -203,7 +242,20 @@ function App() {
           <Route path="/sign-in">
             <Login onSubmit={handleLogin} />
           </Route>
-          <Route exact path="/">
+          <ProtectedRoute
+            path="/"
+            component={Main}
+            loggedIn={loggedIn}
+            onEditAvatar={handleEditAvatarClick}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+          />
+
+          {/* <Route exact path="/">
             {() => {
               if (isLoading) {
                 return <Loading />
@@ -220,17 +272,17 @@ function App() {
                     onCardDelete={handleCardDelete}
                   />
                   <Footer footerText="© 2021 Mesto Russia" />
-
-                  <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} />
-                  {isAddPlacePopupOpen && <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} />}
-                  <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} />
-                  <ImagePopup card={selectedCard} onClose={handlePopupClose} />
-                  <ConfirmPopup isOpen={isConfirmPopupOpen} onClose={handlePopupClose} onConfirm={handleConfirm} />
                 </>
               )
             }}
-          </Route>
+          </Route> */}
         </Switch>
+
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} />
+        {isAddPlacePopupOpen && <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} />}
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} />
+        <ImagePopup card={selectedCard} onClose={handlePopupClose} />
+        <ConfirmPopup isOpen={isConfirmPopupOpen} onClose={handlePopupClose} onConfirm={handleConfirm} />
       </CurrentUserContext.Provider>
     </div>
   )
