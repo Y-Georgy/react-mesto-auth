@@ -1,7 +1,7 @@
 import '../index.css'
 import Loading from './Loading'
 import { useEffect, useState } from 'react'
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch, useHistory } from 'react-router-dom'
 import Header from './Header'
 import Main from './Main'
 import Footer from './Footer'
@@ -20,10 +20,14 @@ import { apiAuth } from '../utils/ApiAuth'
 import ProtectedRoute from './ProtectedRoute'
 
 function App() {
+  const history = useHistory()
   const [isLoading, setIsLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState({})
   const [cards, setCards] = useState([])
   const [userAuth, setUserAuth] = useState({})
+  const [toolTipMessage, setToolTipMessage] = useState('') // открывает попап и передает сообщение
+  const [isErrorToolTip, setIsErrorToolTip] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   // Получение карточек и данных пользователя
   useEffect(() => {
@@ -35,7 +39,6 @@ function App() {
       .catch((err) => {
         setCurrentUser(initialProfile)
         setCards(initialCards)
-        // alert(`Данные профиля и карточек не обновились. Ошибка - ${err}`)
         setIsErrorToolTip(true)
         setToolTipMessage(`Данные профиля и карточек не обновились. ${err}`)
       })
@@ -55,9 +58,6 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
   const [cardToDelete, setCardToDelete] = useState({})
-  const [toolTipMessage, setToolTipMessage] = useState('') // открывает попап и передает сообщение
-  const [isErrorToolTip, setIsErrorToolTip] = useState(false)
-  const [loggedIn, setLoggedIn] = useState(false)
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true)
@@ -160,21 +160,37 @@ function App() {
       .catch((rej) => console.log(rej))
   }
 
-  // ОБРАБОТЧИК ВХОДА ПОЛЬЗОВАТЕЛЯ
-  function handleLogin({ password, email }) {
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // REGISTER
+  function handleRegister({ password, email }) {
     apiAuth
-      .login({
+      .register({
         password: password,
         email: email,
       })
       .then((res) => {
-        //console.log(res) // res.token
+        setIsErrorToolTip(false)
+        setToolTipMessage('Вы успешно зарегистрировались!')
+        history.push('/sign-in')
+      })
+      .catch((err) => {
+        setIsErrorToolTip(true)
+        setToolTipMessage(err)
+      })
+  }
+
+  // LOGIN
+  function handleLogin({ password, email }) {
+    apiAuth
+      .login({
+        password,
+        email,
+      })
+      .then((res) => {
         if (res.token) {
           localStorage.setItem('token', res.token)
-          setLoggedIn(true)
-          setIsErrorToolTip(false)
-          setToolTipMessage('Вы вошли в аккаунт!')
-          return <Redirect to="./" /> // так не работает???
+          checkToken(res.token)
         }
       })
       .catch((err) => {
@@ -183,51 +199,47 @@ function App() {
       })
   }
 
-  function handleRegister({ password, email }) {
+  // CHECK TOKEN
+  function checkToken(localToken) {
     apiAuth
-      .register({
-        password: password,
-        email: email,
-      })
+      .checkToken(localToken)
       .then((res) => {
-        //console.log(res) // res.data._id, res.data.email
-        setIsErrorToolTip(false)
-        setToolTipMessage('Вы успешно зарегистрировались!')
+        auth(res.data._id, res.data.email)
       })
       .catch((err) => {
-        setIsErrorToolTip(true)
-        setToolTipMessage(err)
+        console.log(err)
       })
   }
+
+  // АВТОРИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ
+  function auth(id, email) {
+    setLoggedIn(true)
+    setUserAuth({
+      id,
+      email,
+    })
+  }
+
+  // ПЕРЕАДРЕСАЦИЯ ПОЛЬЗОВАТЕЛЕЙ
   useEffect(() => {
-    function checkToken(localToken) {
-      apiAuth
-        .checkToken(localToken)
-        // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTNmMjdhNzY3YzBjODAwMTMxZTkzMGIiLCJpYXQiOjE2MzE1Mjg5MTN9.tMKFQsMJYt8EbAct0EBGoFqcC9aedXfK57fhFUJlT1Y
-        .then((res) => {
-          if (res.data._id && res.data.email) setLoggedIn(true)
-          setUserAuth({
-            id: res.data._id,
-            email: res.data.email,
-          })
-        })
-        .catch((err) => {
-          setLoggedIn(false)
-          setUserAuth({})
-          console.log(err)
-        })
-    }
+    loggedIn ? history.push('/') : history.push('/sign-in')
+  }, [loggedIn])
+
+  // ПРОВЕРКА ПОЛЬЗОВАТЕЛЯ ПРИ ВХОДЕ
+  useEffect(() => {
     const localToken = localStorage.getItem('token')
-    if (localToken) checkToken(localToken)
+    localToken ? checkToken(localToken) : history.push('/sign-in')
   }, [])
 
+  // ВЫХОД ПОЛЬЗОВАТЕЛЯ
   function handleSignOutButtonClick() {
+    exit()
+  }
+  function exit() {
     localStorage.removeItem('token')
     setLoggedIn(false)
     setUserAuth({})
   }
-
-  // console.log(loggedIn)
 
   return (
     <div className="page">
@@ -243,9 +255,12 @@ function App() {
             <Login onSubmit={handleLogin} />
           </Route>
           <ProtectedRoute
+            exact
             path="/"
             component={Main}
             loggedIn={loggedIn}
+            isLoading={isLoading}
+            loading={Loading}
             onEditAvatar={handleEditAvatarClick}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
@@ -254,30 +269,8 @@ function App() {
             onCardLike={handleCardLike}
             onCardDelete={handleCardDelete}
           />
-
-          {/* <Route exact path="/">
-            {() => {
-              if (isLoading) {
-                return <Loading />
-              }
-              return (
-                <>
-                  <Main
-                    onEditAvatar={handleEditAvatarClick}
-                    onEditProfile={handleEditProfileClick}
-                    onAddPlace={handleAddPlaceClick}
-                    onCardClick={handleCardClick}
-                    cards={cards}
-                    onCardLike={handleCardLike}
-                    onCardDelete={handleCardDelete}
-                  />
-                  <Footer footerText="© 2021 Mesto Russia" />
-                </>
-              )
-            }}
-          </Route> */}
         </Switch>
-
+        <Footer footerText="© 2021 Mesto Russia" />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} />
         {isAddPlacePopupOpen && <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} />}
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} />

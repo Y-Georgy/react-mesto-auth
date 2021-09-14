@@ -60,7 +60,7 @@ class ApiAuth {
       } else if (res.status === 401) {
         return Promise.reject(`Токен не валиден`)
       } else {
-        return Promise.reject('Что-то пошло не так! Попробуйте ещё раз.')
+        return Promise.reject(`Что-то пошло не так! Попробуйте ещё раз. Ошибка ${res.status}`)
       }
     })
   }

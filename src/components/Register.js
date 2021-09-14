@@ -52,7 +52,7 @@ function Register({ onSubmit }) {
       />
       <span className="form__error password-input-error"></span>
       <button type="submit" className="form__submit-button">
-        Войти
+        Зарегистрироваться
       </button>
       <p className="form__text">
         Уже зарегистрированы?{' '}

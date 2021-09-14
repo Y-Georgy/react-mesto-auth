@@ -1,19 +1,19 @@
-.header__burger-menu-close {
+.header__burger-menu-button {
   display: none;
 }
 
 @media (max-width: 918px) {
-  .header__burger-menu-close {
-    /* display: flex; */
+  .header__burger-menu-button {
+    display: flex;
     width: 24px;
     height: 18px;
-    background-image: url('../../../images/burger-menu-close.svg');
+    background-image: url('../../../images/burger-menu-icon.svg');
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 20px;
+    background-size: 24px 18px;
   }
 
-  .header__burger-menu-close:hover {
+  .header__burger-menu-button:hover {
     cursor: pointer;
     opacity: 0.6;
     transition: opacity 0.3s linear;
