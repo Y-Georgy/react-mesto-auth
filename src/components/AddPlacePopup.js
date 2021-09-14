@@ -16,7 +16,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   useEffect(() => {
     setName('')
     setLink('')
-  }, [isOpen, onClose])
+  }, [isOpen])
 
   function handleChangeName(e) {
     setName(e.target.value)
@@ -27,14 +27,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   }
 
   return (
-    <PopupWithForm
-      name="add"
-      title="Новое место"
-      buttonText="Создать"
-      isOpen={isOpen}
-      onClose={onClose}
-      onSubmit={handleSubmit}
-    >
+    <PopupWithForm name="add" title="Новое место" buttonText="Создать" isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit}>
       <input
         placeholder="Название"
         type="text"

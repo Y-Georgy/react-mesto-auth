@@ -120,8 +120,10 @@ function App() {
         closeAllPopups()
       }
     }
-    document.addEventListener('keyup', closeByEscape)
-    return () => document.removeEventListener('keyup', closeByEscape) // TODO слушатель не снимается
+    if (selectedCard.link | isEditProfilePopupOpen | isAddPlacePopupOpen | isEditAvatarPopupOpen | isConfirmPopupOpen) {
+      document.addEventListener('keyup', closeByEscape)
+    }
+    return () => document.removeEventListener('keyup', closeByEscape)
   }, [selectedCard, isEditProfilePopupOpen, isAddPlacePopupOpen, isEditAvatarPopupOpen, isConfirmPopupOpen])
 
   // лайки
@@ -160,7 +162,7 @@ function App() {
       .catch((rej) => console.log(rej))
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////
 
   // REGISTER
   function handleRegister({ password, email }) {
@@ -272,7 +274,7 @@ function App() {
         </Switch>
         <Footer footerText="© 2021 Mesto Russia" />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} />
-        {isAddPlacePopupOpen && <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} />}
+        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} />
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} />
         <ImagePopup card={selectedCard} onClose={handlePopupClose} />
         <ConfirmPopup isOpen={isConfirmPopupOpen} onClose={handlePopupClose} onConfirm={handleConfirm} />
