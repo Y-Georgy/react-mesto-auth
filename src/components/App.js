@@ -272,7 +272,7 @@ function App() {
             onCardDelete={handleCardDelete}
           />
         </Switch>
-        <Footer footerText="© 2021 Mesto Russia" />
+        {loggedIn && <Footer footerText="© 2021 Mesto Russia" />}
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={handlePopupClose} onUpdateUser={handleUpdateUser} />
         <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={handlePopupClose} onAddPlace={handleAddPlaceSubmit} />
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={handlePopupClose} onUpdateAvatar={handleUpdateAvatar} />
